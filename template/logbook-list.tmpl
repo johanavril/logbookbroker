@@ -1,0 +1,138 @@
+{
+  "type": "carousel",
+  "contents": [
+    {{$len := len .}}
+    {{range $i, $e := .}}
+        {
+            "type": "bubble",
+            "styles": {
+                "body": {
+                "separator": true
+                }
+            },
+            "header": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                {
+                    "type": "text",
+                    "text": "{{$e.Date}}",
+                    "weight": "bold",
+                    "size": "xxl",
+                    "color": "#14056e"
+                }
+                ]
+            },
+            "body": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                {
+                    "type": "box",
+                    "layout": "vertical",
+                    "margin": "xxl",
+                    "spacing": "sm",
+                    "contents": [
+                    {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
+                        {
+                            "type": "text",
+                            "text": "Clock In",
+                            "size": "sm",
+                            "color": "#555555",
+                            "weight": "bold"
+                        },
+                        {
+                            "type": "text",
+                            "text": "{{$e.ClockIn}}",
+                            "size": "sm",
+                            "color": "#111111",
+                            "align": "end"
+                        }
+                        ]
+                    },
+                    {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
+                        {
+                            "type": "text",
+                            "text": "Clock Out",
+                            "size": "sm",
+                            "color": "#555555",
+                            "weight": "bold"
+                        },
+                        {
+                            "type": "text",
+                            "text": "{{$e.ClockOut}}",
+                            "size": "sm",
+                            "color": "#111111",
+                            "align": "end"
+                        }
+                        ]
+                    },
+                    {
+                        "type": "box",
+                        "layout": "vertical",
+                        "margin": "xxl",
+                        "contents": [
+                        {
+                            "type": "text",
+                            "text": "Activity",
+                            "size": "sm",
+                            "color": "#555555",
+                            "weight": "bold"
+                        },
+                        {
+                            "type": "text",
+                            "text": "{{$e.Activity}}",
+                            "size": "sm",
+                            "color": "#111111",
+                            "wrap": true
+                        }
+                        ]
+                    },
+                    {
+                        "type": "box",
+                        "layout": "vertical",
+                        "margin": "xxl",
+                        "contents": [
+                        {
+                            "type": "text",
+                            "text": "Description",
+                            "size": "sm",
+                            "color": "#555555",
+                            "weight": "bold"
+                        },
+                        {
+                            "type": "text",
+                            "text": "{{$e.Description}}",
+                            "size": "sm",
+                            "color": "#111111",
+                            "wrap": true
+                        }
+                        ]
+                    }
+                    {{if not $e}},
+                        {
+                            "type": "button",
+                            "margin": "xxl",
+                            "style": "primary",
+                            "action": {
+                            "type": "uri",
+                            "label": "{{$e.Action.Label}}",
+                            "uri": "{{$e.Action.URI}}"
+                            }
+                        }
+                    {{end}}
+                    ]
+                }
+                ]
+            }
+        }
+        {{if ne $i (minus $len 1)}},{{end}}
+    {{end}}
+  ]
+}

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export ENV=$1
+
+DB_USERNAME=`grep 'username' ./config/database/$ENV.yml | awk '{ print $2}'`
+DB_PASSWORD=`grep 'password' ./config/database/$ENV.yml | awk '{ print $2}'`
+DB_HOST=`grep 'host' ./config/database/$ENV.yml | awk '{ print $2}'`
+DB_NAME=`grep 'dbname' ./config/database/$ENV.yml | awk '{ print $2}'`
+
+~/go/bin/migrate -source file://./migrations -database postgres://$DB_USERNAME:$DB_PASSWORD@$DB_PROVIDER:5432/$DB_NAME drop

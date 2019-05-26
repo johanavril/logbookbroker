@@ -1,0 +1,122 @@
+{
+    "type": "bubble",
+    "styles": {
+      "body": {
+        "separator": true
+      }
+    },
+    "header": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "Logbook Status",
+          "weight": "bold",
+          "size": "xxl",
+          "color": "#14056e"
+        },
+        {
+          "type": "text",
+          "text": "{{.Date}}",
+          "size": "xs"
+        }
+      ]
+    },
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "box",
+          "layout": "vertical",
+          "margin": "xxl",
+          "spacing": "sm",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "Clock In",
+                  "size": "sm",
+                  "color": "#555555",
+                  "weight": "bold"
+                },
+                {
+                  "type": "text",
+                  "text": "{{.ClockIn}}",
+                  "size": "sm",
+                  "color": "#111111",
+                  "align": "end"
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "Clock Out",
+                  "size": "sm",
+                  "color": "#555555",
+                  "weight": "bold"
+                },
+                {
+                  "type": "text",
+                  "text": "{{.ClockOut}}",
+                  "size": "sm",
+                  "color": "#111111",
+                  "align": "end"
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "margin": "xxl",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "Activity",
+                  "size": "sm",
+                  "color": "#555555",
+                  "weight": "bold"
+                },
+                {
+                  "type": "text",
+                  "text": "{{.Activity}}",
+                  "size": "sm",
+                  "color": "#111111",
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "margin": "xxl",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "Description",
+                  "size": "sm",
+                  "color": "#555555",
+                  "weight": "bold"
+                },
+                {
+                  "type": "text",
+                  "text": "{{.Description}}",
+                  "size": "sm",
+                  "color": "#111111",
+                  "wrap": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }

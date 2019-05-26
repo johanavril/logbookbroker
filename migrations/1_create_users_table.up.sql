@@ -1,0 +1,9 @@
+CREATE TABLE users (
+	id SERIAL,
+	user_id CHARACTER VARYING,
+	username CHARACTER VARYING,
+	password CHARACTER VARYING,
+	name CHARACTER VARYING,
+	CONSTRAINT pk_users PRIMARY KEY (id),
+	CONSTRAINT uk_users UNIQUE (user_id)
+)
