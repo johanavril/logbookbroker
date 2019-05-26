@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/johanavril/logbookbroker/src/bot"
 	"github.com/johanavril/logbookbroker/src/service"
@@ -23,9 +24,14 @@ func main() {
 
 	http.HandleFunc("/app", app.Callback)
 
-	app.RegisterCron()
+	go app.RegisterCron()
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
 }
