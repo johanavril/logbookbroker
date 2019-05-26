@@ -23,6 +23,56 @@ func getUserInput(message string) (string, []string) {
 	return command, input
 }
 
+func (app *logbookBroker) help(replyToken string) error {
+	if _, err := app.bot.ReplyMessage(
+		replyToken,
+		linebot.NewTextMessage(constant.Message.Help),
+	).Do(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (app *logbookBroker) helpList(replyToken string) error {
+	if _, err := app.bot.ReplyMessage(
+		replyToken,
+		linebot.NewTextMessage(constant.Message.HelpList),
+	).Do(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (app *logbookBroker) helpLogbook(replyToken string) error {
+	if _, err := app.bot.ReplyMessage(
+		replyToken,
+		linebot.NewTextMessage(constant.Message.HelpLogbook),
+	).Do(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (app *logbookBroker) helpLogin(replyToken string) error {
+	if _, err := app.bot.ReplyMessage(
+		replyToken,
+		linebot.NewTextMessage(constant.Message.HelpLogin),
+	).Do(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (app *logbookBroker) helpStatus(replyToken string) error {
+	if _, err := app.bot.ReplyMessage(
+		replyToken,
+		linebot.NewTextMessage(constant.Message.HelpStatus),
+	).Do(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (app *logbookBroker) getUserData(replyToken, userId string) (*model.User, error) {
 	user := &model.User{}
 	if err := user.GetByLineUserId(userId); err != nil {
@@ -224,7 +274,7 @@ func (app *logbookBroker) status(replyToken, userId string) error {
 		return err
 	}
 
-	tmpl := template.Must(template.ParseFiles("template/logbook-status.tmpl"))
+	tmpl := template.Must(template.ParseFiles("../template/logbook-status.tmpl"))
 	buf := new(bytes.Buffer)
 	if err := tmpl.Execute(buf, logbook); err != nil {
 		return err
@@ -272,7 +322,7 @@ func (app *logbookBroker) list(replyToken, userId string) error {
 		"minus": util.Minus,
 	}
 
-	tmpl := template.Must(template.New("logbook-list.tmpl").Funcs(funcMap).ParseFiles("template/logbook-list.tmpl"))
+	tmpl := template.Must(template.New("logbook-list.tmpl").Funcs(funcMap).ParseFiles("../template/logbook-list.tmpl"))
 
 	buf := new(bytes.Buffer)
 	if err := tmpl.Execute(buf, logbooks); err != nil {
@@ -298,14 +348,24 @@ func (app *logbookBroker) handleText(message *linebot.TextMessage, replyToken st
 	command, input := getUserInput(message.Text)
 
 	switch command {
+	case constant.Command.Help:
+		return app.help(replyToken)
+	case constant.Command.HelpList:
+		return app.helpList(replyToken)
+	case constant.Command.HelpLogbook:
+		return app.helpLogbook(replyToken)
+	case constant.Command.HelpLogin:
+		return app.helpLogin(replyToken)
+	case constant.Command.HelpStatus:
+		return app.helpStatus(replyToken)
+	case constant.Command.List:
+		return app.list(replyToken, source.UserID)
 	case constant.Command.Logbook:
 		return app.logbook(input, replyToken, source.UserID)
 	case constant.Command.Login:
 		return app.loginAndRecord(input, replyToken, source.UserID)
 	case constant.Command.Status:
 		return app.status(replyToken, source.UserID)
-	case constant.Command.List:
-		return app.list(replyToken, source.UserID)
 	}
 
 	return nil
