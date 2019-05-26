@@ -3,8 +3,6 @@ package service
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/johanavril/logbookbroker/src/constant"
@@ -65,13 +63,10 @@ func SubmitReminder(channelToken string) error {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Println(err)
 		return nil
 	}
 
 	defer resp.Body.Close()
-	fmt.Println(resp)
-	b, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println(string(b))
+
 	return nil
 }
