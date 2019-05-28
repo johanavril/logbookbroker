@@ -115,15 +115,15 @@
                         }
                         ]
                     }
-                    {{if not $e}},
+                    {{if ne $e.Action.Label ""}},
                         {
                             "type": "button",
                             "margin": "xxl",
                             "style": "primary",
                             "action": {
-                            "type": "uri",
+                            "type": "message",
                             "label": "{{$e.Action.Label}}",
-                            "uri": "{{$e.Action.URI}}"
+                            "text": "{{extractEditToken $e.Action.URI}}"
                             }
                         }
                     {{end}}

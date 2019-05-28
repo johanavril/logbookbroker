@@ -319,7 +319,8 @@ func (app *logbookBroker) list(replyToken, userId string) error {
 	}
 
 	funcMap := template.FuncMap{
-		"minus": util.Minus,
+		"minus":            util.Minus,
+		"extractEditToken": util.ExtractEditToken,
 	}
 
 	tmpl := template.Must(template.New("logbook-list.tmpl").Funcs(funcMap).ParseFiles("../template/logbook-list.tmpl"))
