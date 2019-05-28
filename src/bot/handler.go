@@ -112,6 +112,16 @@ func (app *logbookBroker) help(replyToken string) error {
 	return nil
 }
 
+func (app *logbookBroker) helpEdit(replyToken string) error {
+	if _, err := app.bot.ReplyMessage(
+		replyToken,
+		linebot.NewTextMessage(constant.Message.HelpEdit),
+	).Do(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (app *logbookBroker) helpList(replyToken string) error {
 	if _, err := app.bot.ReplyMessage(
 		replyToken,
@@ -432,6 +442,8 @@ func (app *logbookBroker) handleText(message *linebot.TextMessage, replyToken st
 		return app.edit(input, replyToken, source.UserID)
 	case constant.Command.Help:
 		return app.help(replyToken)
+	case constant.Command.HelpEdit:
+		return app.helpEdit(replyToken)
 	case constant.Command.HelpList:
 		return app.helpList(replyToken)
 	case constant.Command.HelpLogbook:

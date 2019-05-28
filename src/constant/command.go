@@ -3,6 +3,7 @@ package constant
 type command struct {
 	Edit        string
 	Help        string
+	HelpEdit    string
 	HelpList    string
 	HelpLogin   string
 	HelpLogbook string
@@ -19,6 +20,7 @@ func registerCommand() *command {
 	return &command{
 		Edit:        "edit",
 		Help:        "help",
+		HelpEdit:    "help edit",
 		HelpList:    "help list",
 		HelpLogin:   "help login",
 		HelpLogbook: "help logbook",

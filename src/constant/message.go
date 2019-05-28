@@ -5,6 +5,7 @@ type message struct {
 	EditFormat          string
 	EditSuccess         string
 	Help                string
+	HelpEdit            string
 	HelpList            string
 	HelpLogbook         string
 	HelpLogin           string
@@ -25,9 +26,10 @@ var Message = registerMessage()
 func registerMessage() *message {
 	return &message{
 		EditFailed:          "Edit logbook failed, please try again.",
-		EditFormat:          "Edit Token can be found by acessing menu list and press the edit button on the logbook you want to edit, to unlock the edit button, you need to request edit first.\nPlease edit logbook with the following format:\nedit\nEDITTOKEN\nCLOCKIN\nCLOCKOUT\nACTIVITY\nDESCRIPTION",
+		EditFormat:          "Please edit logbook with the following format:\nedit\nEDITTOKEN\nCLOCKIN\nCLOCKOUT\nACTIVITY\nDESCRIPTION",
 		EditSuccess:         "Logbook has been successfully updated.",
-		Help:                "Hi, welcome to Logbook Broker.\nWe are a portal for Binusian to easily submit their daily 3+1 logbook.\nFirst if you want to use our service you need to login first, you can login by using your industry.socs.binus.ac.id/learning-plan account\n\nFor more detailed information about our feature you can type  the following message:\nhelp login\nhelp logbook\nhelp status\nhelp list",
+		Help:                "Hi, welcome to Logbook Broker.\nWe are a portal for Binusian to easily submit their daily 3+1 logbook.\nFirst if you want to use our service you need to login first, you can login by using your industry.socs.binus.ac.id/learning-plan account\n\nFor more detailed information about our feature you can type  the following message:\nhelp login\nhelp logbook\nhelp status\nhelp list\nhelp edit",
+		HelpEdit:            "Edit Token can be found by acessing menu list and press the edit button on the logbook you want to edit, to unlock the edit button, you need to request edit first.\nTo edit logbook you can send message with the following format:\nedit\nEDITTOKEN\nCLOCKIN\nCLOCKOUT\nACTIVITY\nDESCRIPTION",
 		HelpList:            "You can check your last 7 days logbook by sending us a message with text: list",
 		HelpLogbook:         "To submit your today logbook you can send message with the following format:\nlogbook\nCLOCKIN\nCLOCKOUT\nACTIVITY\nDESCRIPTION",
 		HelpLogin:           "You only need to login once and then you can enjoy our service.\nIf you want to change user then just login again, we will automatically replace your login credential.\n\nTo login into our service you can send message with the following format:\nlogin\nUSERNAME\nPASSWORD",
