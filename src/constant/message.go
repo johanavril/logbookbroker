@@ -25,7 +25,7 @@ var Message = registerMessage()
 func registerMessage() *message {
 	return &message{
 		EditFailed:          "Edit logbook failed, please try again.",
-		EditFormat:          "Please edit logbook with the following format:\nedit\nEDITTOKEN\nCLOCKIN\nCLOCKOUT\nACTIVITY\nDESCRIPTION",
+		EditFormat:          "Edit Token can be found by acessing menu list and press the edit button on the logbook you want to edit, to unlock the edit button, you need to request edit first.\nPlease edit logbook with the following format:\nedit\nEDITTOKEN\nCLOCKIN\nCLOCKOUT\nACTIVITY\nDESCRIPTION",
 		EditSuccess:         "Logbook has been successfully updated.",
 		Help:                "Hi, welcome to Logbook Broker.\nWe are a portal for Binusian to easily submit their daily 3+1 logbook.\nFirst if you want to use our service you need to login first, you can login by using your industry.socs.binus.ac.id/learning-plan account\n\nFor more detailed information about our feature you can type  the following message:\nhelp login\nhelp logbook\nhelp status\nhelp list",
 		HelpList:            "You can check your last 7 days logbook by sending us a message with text: list",
