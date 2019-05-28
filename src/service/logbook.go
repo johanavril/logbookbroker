@@ -38,7 +38,7 @@ func GetLogbook(date time.Time) (*Logbook, error) {
 		return nil, err
 	}
 
-	selector := fmt.Sprintf(".active.attached.tab.segment tr:nth-child(%d)", date.Day())
+	selector := fmt.Sprintf(".active.attached.tab.segment tbody > tr:nth-child(%d)", date.Day())
 	tr := doc.Find(selector)
 
 	logbook := Logbook{}
@@ -69,10 +69,11 @@ func GetWeekLogbook() ([]Logbook, error) {
 		return nil, err
 	}
 	days := util.ThisWeekRange()
+
 	logbooks := []Logbook{}
 
 	for _, day := range days {
-		selector := fmt.Sprintf(`.attached.tab.segment[data-tab^="%s"] tr:nth-child(%d)`, day.Month(), day.Day())
+		selector := fmt.Sprintf(`.attached.tab.segment[data-tab^="%s"] tbody > tr:nth-child(%d)`, day.Month(), day.Day())
 		tr := doc.Find(selector)
 
 		logbook := Logbook{}
