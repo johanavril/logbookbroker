@@ -2,14 +2,13 @@ package database
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"gopkg.in/yaml.v2"
 )
 
 type dataSource struct {
@@ -27,17 +26,19 @@ func (ds dataSource) String() string {
 }
 
 func getDataSource() (*dataSource, error) {
-	env := os.Getenv("APP_ENV")
-	yamlFile, err := ioutil.ReadFile("../config/database/" + env + ".yml")
-	if err != nil {
-		return nil, err
-	}
-
 	ds := dataSource{}
+	dburl := os.Getenv("DATABASE_URL")
+	dburl = dburl[11:]
 
-	if err := yaml.Unmarshal(yamlFile, &ds); err != nil {
-		return nil, err
-	}
+	s := strings.Split(dburl, "@")
+	credential := strings.Split(s[0], ":")
+	dbcon := strings.Split(s[1], "/")
+	socket := strings.Split(dbcon[0], ":")
+
+	ds.User = credential[0]
+	ds.Password = credential[1]
+	ds.Host = socket[0]
+	ds.Dbname = dbcon[1]
 
 	return &ds, nil
 }
