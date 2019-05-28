@@ -1,6 +1,7 @@
 package constant
 
 type command struct {
+	Edit        string
 	Help        string
 	HelpList    string
 	HelpLogin   string
@@ -16,6 +17,7 @@ var Command = registerCommand()
 
 func registerCommand() *command {
 	return &command{
+		Edit:        "edit",
 		Help:        "help",
 		HelpList:    "help list",
 		HelpLogin:   "help login",
