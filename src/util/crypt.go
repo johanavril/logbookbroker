@@ -8,38 +8,14 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
-
-	"gopkg.in/yaml.v2"
+	"os"
 )
-
-type cipherKey struct {
-	Value string `yaml:"cipher_key"`
-}
-
-func getKey() (*cipherKey, error) {
-	yamlFile, err := ioutil.ReadFile("../config/cipher.yml")
-	if err != nil {
-		return nil, err
-	}
-
-	c := cipherKey{}
-
-	if err := yaml.Unmarshal(yamlFile, &c); err != nil {
-		return nil, err
-	}
-
-	return &c, nil
-}
 
 func Encrypt(unencrypted string) (string, error) {
 	plaintext := []byte(unencrypted)
-	key, err := getKey()
-	if err != nil {
-		return "", err
-	}
+	key := os.Getenv("CIPHER_KEY")
 
-	byteKey := []byte(key.Value)
+	byteKey := []byte(key)
 	c, err := aes.NewCipher(byteKey)
 	if err != nil {
 		return "", err
@@ -66,12 +42,9 @@ func Decrypt(encrypted string) (string, error) {
 		return "", nil
 	}
 
-	key, err := getKey()
-	if err != nil {
-		return "", err
-	}
+	key := os.Getenv("CIPHER_KEY")
 
-	byteKey := []byte(key.Value)
+	byteKey := []byte(key)
 	c, err := aes.NewCipher(byteKey)
 	if err != nil {
 		return "", err

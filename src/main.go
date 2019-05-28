@@ -6,17 +6,12 @@ import (
 	"os"
 
 	"github.com/johanavril/logbookbroker/src/bot"
-	"github.com/johanavril/logbookbroker/src/service"
 )
 
 func main() {
-	credential, err := service.GetAppCredential()
-	if err != nil {
-		log.Fatal(err)
-	}
 	app, err := bot.New(
-		credential.ChannelSecret,
-		credential.ChannelToken,
+		os.Getenv("CHANNEL_SECRET"),
+		os.Getenv("CHANNEL_TOKEN"),
 	)
 	if err != nil {
 		log.Fatal(err)
