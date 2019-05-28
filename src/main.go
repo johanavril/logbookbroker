@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/johanavril/logbookbroker/src/bot"
 )
@@ -28,6 +30,10 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
+	a, _ := filepath.Glob("*")
+	fmt.Println(a)
+	b, _ := filepath.Glob("../*")
+	fmt.Println(b)
 
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
