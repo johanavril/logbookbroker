@@ -23,6 +23,85 @@ func getUserInput(message string) (string, []string) {
 	return command, input
 }
 
+func (app *logbookBroker) edit(input []string, replyToken, userId string) error {
+	if len(input) != 5 {
+		if _, err := app.bot.ReplyMessage(
+			replyToken,
+			linebot.NewTextMessage(constant.Message.EditFormat),
+		).Do(); err != nil {
+			return err
+		}
+		return nil
+	}
+
+	user, err := app.getUserData(replyToken, userId)
+	if err != nil {
+		return err
+	} else if user == nil {
+		return nil
+	}
+
+	decryptedPassword, err := util.Decrypt(user.Password)
+	if err != nil {
+		return err
+	}
+
+	userCredential := []string{user.Username, decryptedPassword}
+	if _, err := app.login(userCredential); err != nil {
+		return err
+	}
+
+	logbookEditURL := service.ConstructEditURL(input[0])
+
+	cookies, csrfToken, err := service.GetCSRF(logbookEditURL)
+	if err != nil {
+		return err
+	}
+
+	body := url.Values{}
+	body.Set("_token", csrfToken)
+	body.Set("clock-in", input[1])
+	body.Set("clock-out", input[2])
+	body.Set("activity", input[3])
+	body.Set("description", input[4])
+
+	req, err := http.NewRequest(http.MethodPost, logbookEditURL, strings.NewReader(body.Encode()))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("cache-control", "no-cache")
+	for _, cookie := range cookies {
+		req.AddCookie(cookie)
+	}
+	resp, err := service.GetLogbookClient().Do(req)
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+
+		if _, err := app.bot.ReplyMessage(
+			replyToken,
+			linebot.NewTextMessage(constant.Message.EditSuccess),
+		).Do(); err != nil {
+			return err
+		}
+	} else {
+		if _, err := app.bot.ReplyMessage(
+			replyToken,
+			linebot.NewTextMessage(constant.Message.EditFailed),
+		).Do(); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (app *logbookBroker) help(replyToken string) error {
 	if _, err := app.bot.ReplyMessage(
 		replyToken,
@@ -319,8 +398,8 @@ func (app *logbookBroker) list(replyToken, userId string) error {
 	}
 
 	funcMap := template.FuncMap{
-		"minus":            util.Minus,
-		"extractEditToken": util.ExtractEditToken,
+		"minus":         util.Minus,
+		"constructEdit": service.ConstructEditMessage,
 	}
 
 	tmpl := template.Must(template.New("logbook-list.tmpl").Funcs(funcMap).ParseFiles("../template/logbook-list.tmpl"))
@@ -349,6 +428,8 @@ func (app *logbookBroker) handleText(message *linebot.TextMessage, replyToken st
 	command, input := getUserInput(message.Text)
 
 	switch command {
+	case constant.Command.Edit:
+		return app.edit(input, replyToken, source.UserID)
 	case constant.Command.Help:
 		return app.help(replyToken)
 	case constant.Command.HelpList:
