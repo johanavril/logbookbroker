@@ -1,10 +1,8 @@
 package bot
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/jasonlvhit/gocron"
 	"github.com/johanavril/logbookbroker/src/service"
@@ -34,8 +32,6 @@ func (app *logbookBroker) Callback(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 		return
 	}
-
-	fmt.Println(os.Getwd())
 
 	for _, event := range events {
 		switch event.Type {

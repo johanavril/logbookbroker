@@ -17,6 +17,9 @@ func main() {
 		log.Fatal(err)
 	}
 
+	staticFileServer := http.FileServer(http.Dir("../template"))
+	http.HandleFunc("/template/", http.StripPrefix("/template/", staticFileServer).ServeHTTP)
+
 	http.HandleFunc("/app", app.Callback)
 
 	go app.RegisterCron()
