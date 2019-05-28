@@ -1,11 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 
 	"github.com/johanavril/logbookbroker/src/bot"
 )
@@ -20,9 +18,9 @@ func main() {
 	}
 
 	staticFileServer := http.FileServer(http.Dir("../template"))
-	http.HandleFunc("/template/", http.StripPrefix("/template/", staticFileServer).ServeHTTP)
+	http.Handle("/template/", http.StripPrefix("/template/", staticFileServer))
 
-	http.HandleFunc("/app", app.Callback)
+	http.HandleFunc("/bot", app.Callback)
 
 	go app.RegisterCron()
 
@@ -30,10 +28,6 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	a, _ := filepath.Glob("*")
-	fmt.Println(a)
-	b, _ := filepath.Glob("../*")
-	fmt.Println(b)
 
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
