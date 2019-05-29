@@ -1,0 +1,3 @@
+#!/bin/bash
+
+go build -o bin/logbookbroker src/main.go && ./bin/logbookbroker
