@@ -1,6 +1,7 @@
 package constant
 
 type message struct {
+	EditNotGranted      string
 	EditFailed          string
 	EditFormat          string
 	EditSuccess         string
@@ -25,6 +26,7 @@ var Message = registerMessage()
 
 func registerMessage() *message {
 	return &message{
+		EditNotGranted:      "You can't edit logbook on that day.",
 		EditFailed:          "Edit logbook failed, please try again.",
 		EditFormat:          "Please edit logbook with the following format:\nedit\nDD/MM/YYYY\nCLOCKIN\nCLOCKOUT\nACTIVITY\nDESCRIPTION",
 		EditSuccess:         "Logbook has been successfully updated.",

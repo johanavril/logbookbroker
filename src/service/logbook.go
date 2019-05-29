@@ -100,8 +100,27 @@ func GetWeekLogbook() ([]Logbook, error) {
 	return logbooks, nil
 }
 
-func GetEditURL(token string) string {
-	return fmt.Sprintf("%s/%s/edit", constant.URL.Logbook, token)
+func GetEditURL(date time.Time) (string, error) {
+	resp, err := GetLogbookClient().Get(constant.URL.Logbook)
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	selector := fmt.Sprintf(`.attached.tab.segment[data-tab^="%s"] tbody > tr:nth-child(%d) a`, date.Month(), date.Day())
+	a, exists := doc.Find(selector).Attr("href")
+	if !exists {
+		return "", fmt.Errorf("Edit logbook on %s not granted.", date.Format("02/01/2006"))
+	}
+	token := extractEditToken(a)
+
+	return fmt.Sprintf("%s/%s/edit", constant.URL.Logbook, token), nil
 }
 
 func ConstructEditMessage(logbook Logbook) string {
@@ -111,4 +130,9 @@ func ConstructEditMessage(logbook Logbook) string {
 		logbook.ClockOut,
 		logbook.Activity,
 		logbook.Description)
+}
+
+func extractEditToken(url string) string {
+	u := strings.Split(url, "/")
+	return u[6]
 }

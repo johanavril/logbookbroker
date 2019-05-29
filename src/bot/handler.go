@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"text/template"
 	"time"
@@ -51,7 +52,40 @@ func (app *logbookBroker) edit(input []string, replyToken, userId string) error 
 		return err
 	}
 
-	logbookEditURL := service.ConstructEditURL(input[0])
+	editDate := strings.Split(input[0], "/")
+	loc, err := time.LoadLocation("Asia/Jakarta")
+	if err != nil {
+		return err
+	}
+
+	year, err := strconv.Atoi(editDate[2])
+	if err != nil {
+		return err
+	}
+
+	month, err := strconv.Atoi(editDate[1])
+	if err != nil {
+		return err
+	}
+
+	date, err := strconv.Atoi(editDate[0])
+	if err != nil {
+		return err
+	}
+
+	logbookEditURL, err := service.GetEditURL(time.Date(year, time.Month(month), date, 0, 0, 0, 0, loc))
+	if err != nil {
+		if strings.Contains(err.Error(), "granted.") {
+			if _, err := app.bot.ReplyMessage(
+				replyToken,
+				linebot.NewTextMessage(constant.Message.EditNotGranted),
+			).Do(); err != nil {
+				return err
+			}
+			return nil
+		}
+		return err
+	}
 
 	cookies, csrfToken, err := service.GetCSRF(logbookEditURL)
 	if err != nil {
