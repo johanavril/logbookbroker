@@ -437,7 +437,7 @@ func (app *logbookBroker) list(replyToken, userId string) error {
 func (app *logbookBroker) handleText(message *linebot.TextMessage, replyToken string, source *linebot.EventSource) error {
 	command, input := getUserInput(message.Text)
 
-	switch command {
+	switch strings.ToLower(command) {
 	case constant.Command.Edit:
 		return app.edit(input, replyToken, source.UserID)
 	case constant.Command.Help:
