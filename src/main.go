@@ -18,7 +18,7 @@ func main() {
 	}
 
 	staticFileServer := http.FileServer(http.Dir("../template"))
-	http.Handle("/template/", http.StripPrefix("/template/", staticFileServer))
+	http.HandleFunc("/template/", http.StripPrefix("/template/", staticFileServer).ServeHTTP)
 
 	http.HandleFunc("/bot", app.Callback)
 
