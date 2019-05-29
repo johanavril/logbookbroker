@@ -100,13 +100,13 @@ func GetWeekLogbook() ([]Logbook, error) {
 	return logbooks, nil
 }
 
-func ConstructEditURL(token string) string {
+func GetEditURL(token string) string {
 	return fmt.Sprintf("%s/%s/edit", constant.URL.Logbook, token)
 }
 
 func ConstructEditMessage(logbook Logbook) string {
 	return fmt.Sprintf("edit-tmp\\n%s\\n%s\\n%s\\n%s\\n%s",
-		logbook.Date,
+		strings.Split(logbook.Date, " ")[1],
 		logbook.ClockIn,
 		logbook.ClockOut,
 		logbook.Activity,
