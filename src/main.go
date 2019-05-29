@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -18,12 +17,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	staticFileServer := http.FileServer(http.Dir("../template"))
+	staticFileServer := http.FileServer(http.Dir("template"))
 	http.HandleFunc("/template/", http.StripPrefix("/template/", staticFileServer).ServeHTTP)
 
 	http.HandleFunc("/bot", app.Callback)
-	fmt.Println(os.Getwd())
-	fmt.Println(os.Executable())
 
 	go app.RegisterCron()
 
