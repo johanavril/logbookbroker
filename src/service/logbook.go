@@ -106,7 +106,7 @@ func ConstructEditURL(token string) string {
 
 func ConstructEditMessage(logbook Logbook) string {
 	return fmt.Sprintf("edit-tmp\\n%s\\n%s\\n%s\\n%s\\n%s",
-		util.ExtractEditToken(logbook.Action.URI),
+		logbook.Date,
 		logbook.ClockIn,
 		logbook.ClockOut,
 		logbook.Activity,
