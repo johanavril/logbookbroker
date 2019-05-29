@@ -363,7 +363,7 @@ func (app *logbookBroker) status(replyToken, userId string) error {
 		return err
 	}
 
-	tmpl := template.Must(template.ParseFiles("../template/logbook-status.tmpl"))
+	tmpl := template.Must(template.ParseFiles("./template/logbook-status.tmpl"))
 	buf := new(bytes.Buffer)
 	if err := tmpl.Execute(buf, logbook); err != nil {
 		return err
@@ -412,7 +412,7 @@ func (app *logbookBroker) list(replyToken, userId string) error {
 		"constructEdit": service.ConstructEditMessage,
 	}
 
-	tmpl := template.Must(template.New("logbook-list.tmpl").Funcs(funcMap).ParseFiles("../template/logbook-list.tmpl"))
+	tmpl := template.Must(template.New("logbook-list.tmpl").Funcs(funcMap).ParseFiles("./template/logbook-list.tmpl"))
 
 	buf := new(bytes.Buffer)
 	if err := tmpl.Execute(buf, logbooks); err != nil {
