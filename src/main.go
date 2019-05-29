@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -21,6 +22,8 @@ func main() {
 	http.HandleFunc("/template/", http.StripPrefix("/template/", staticFileServer).ServeHTTP)
 
 	http.HandleFunc("/bot", app.Callback)
+	fmt.Println(os.Getwd())
+	fmt.Println(os.Executable())
 
 	go app.RegisterCron()
 
