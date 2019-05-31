@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/johanavril/logbookbroker/src/constant"
@@ -21,12 +22,14 @@ func RequestEditReminder(channelToken string) error {
 	data := map[string][]message{"messages": []message{m}}
 	body, err := json.Marshal(data)
 	if err != nil {
-		return nil
+		fmt.Println(err)
+		return err
 	}
 
 	req, err := http.NewRequest(http.MethodPost, constant.URL.Broadcast, bytes.NewBuffer(body))
 	if err != nil {
-		return nil
+		fmt.Println(err)
+		return err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -34,7 +37,8 @@ func RequestEditReminder(channelToken string) error {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil
+		fmt.Println(err)
+		return err
 	}
 
 	defer resp.Body.Close()
@@ -50,12 +54,14 @@ func SubmitReminder(channelToken string) error {
 	data := map[string][]message{"messages": []message{m}}
 	body, err := json.Marshal(data)
 	if err != nil {
-		return nil
+		fmt.Println(err)
+		return err
 	}
 
 	req, err := http.NewRequest(http.MethodPost, constant.URL.Broadcast, bytes.NewBuffer(body))
 	if err != nil {
-		return nil
+		fmt.Println(err)
+		return err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -63,7 +69,8 @@ func SubmitReminder(channelToken string) error {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil
+		fmt.Println(err)
+		return err
 	}
 
 	defer resp.Body.Close()
