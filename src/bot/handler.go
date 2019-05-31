@@ -136,6 +136,80 @@ func (app *logbookBroker) edit(input []string, replyToken, userId string) error 
 	return nil
 }
 
+func (app *logbookBroker) requestEdit(input []string, replyToken, userId string) error {
+	if len(input) != 1 {
+		if _, err := app.bot.ReplyMessage(
+			replyToken,
+			linebot.NewTextMessage(constant.Message.RequestEditFormat),
+		).Do(); err != nil {
+			return err
+		}
+		return nil
+	}
+
+	user, err := app.getUserData(replyToken, userId)
+	if err != nil {
+		return err
+	} else if user == nil {
+		return nil
+	}
+
+	decryptedPassword, err := util.Decrypt(user.Password)
+	if err != nil {
+		return err
+	}
+
+	userCredential := []string{user.Username, decryptedPassword}
+	if _, err := app.login(userCredential); err != nil {
+		return err
+	}
+
+	cookies, csrfToken, err := service.GetCSRF(constant.URL.Logbook)
+	if err != nil {
+		return err
+	}
+
+	body := url.Values{}
+	body.Set("_token", csrfToken)
+	body.Set("requested_date", input[0])
+
+	req, err := http.NewRequest(http.MethodPost, constant.URL.LogbookRequestEdit, strings.NewReader(body.Encode()))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("cache-control", "no-cache")
+	for _, cookie := range cookies {
+		req.AddCookie(cookie)
+	}
+	resp, err := service.GetLogbookClient().Do(req)
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+
+		if _, err := app.bot.ReplyMessage(
+			replyToken,
+			linebot.NewTextMessage(constant.Message.RequestEditSuccess),
+		).Do(); err != nil {
+			return err
+		}
+	} else {
+		if _, err := app.bot.ReplyMessage(
+			replyToken,
+			linebot.NewTextMessage(constant.Message.RequestEditFailed),
+		).Do(); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (app *logbookBroker) help(replyToken string) error {
 	if _, err := app.bot.ReplyMessage(
 		replyToken,
@@ -180,6 +254,16 @@ func (app *logbookBroker) helpLogin(replyToken string) error {
 	if _, err := app.bot.ReplyMessage(
 		replyToken,
 		linebot.NewTextMessage(constant.Message.HelpLogin),
+	).Do(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (app *logbookBroker) helpRequestEdit(replyToken string) error {
+	if _, err := app.bot.ReplyMessage(
+		replyToken,
+		linebot.NewTextMessage(constant.Message.HelpRequestEdit),
 	).Do(); err != nil {
 		return err
 	}
@@ -442,8 +526,9 @@ func (app *logbookBroker) list(replyToken, userId string) error {
 	}
 
 	funcMap := template.FuncMap{
-		"minus":         util.Minus,
-		"constructEdit": service.ConstructEditMessage,
+		"minus":                util.Minus,
+		"constructEdit":        service.ConstructEditMessage,
+		"constructRequestEdit": service.ConstructRequestEditMessage,
 	}
 
 	tmpl := template.Must(template.New("logbook-list.tmpl").Funcs(funcMap).ParseFiles("./template/logbook-list.tmpl"))
@@ -484,6 +569,8 @@ func (app *logbookBroker) handleText(message *linebot.TextMessage, replyToken st
 		return app.helpLogbook(replyToken)
 	case constant.Command.HelpLogin:
 		return app.helpLogin(replyToken)
+	case constant.Command.HelpRequestEdit:
+		return app.helpRequestEdit(replyToken)
 	case constant.Command.HelpStatus:
 		return app.helpStatus(replyToken)
 	case constant.Command.List:
@@ -492,6 +579,8 @@ func (app *logbookBroker) handleText(message *linebot.TextMessage, replyToken st
 		return app.logbook(input, replyToken, source.UserID)
 	case constant.Command.Login:
 		return app.loginAndRecord(input, replyToken, source.UserID)
+	case constant.Command.RequestEdit:
+		return app.requestEdit(input, replyToken, source.UserID)
 	case constant.Command.Status:
 		return app.status(replyToken, source.UserID)
 	}

@@ -115,15 +115,21 @@
                         }
                         ]
                     }
-                    {{if ne $e.Action.Label ""}},
+                    {{if ne $e.Action ""}},
                         {
                             "type": "button",
                             "margin": "xxl",
                             "style": "primary",
                             "action": {
                             "type": "message",
-                            "label": "{{$e.Action.Label}}",
-                            "text": "{{constructEdit $e}}"
+                            "label": "{{$e.Action}}",
+                            {{if eq $e.Action "Edit"}}
+                                "text": "{{constructEdit $e}}"
+                            {{else if eq $e.Action "Request Edit"}}
+                                "text": "{{constructRequestEdit $e}}"
+                            {{else}}
+                                "text": "Waiting for Approval"
+                            {{end}}
                             }
                         }
                     {{end}}

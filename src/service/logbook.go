@@ -11,18 +11,13 @@ import (
 	"github.com/johanavril/logbookbroker/src/util"
 )
 
-type action struct {
-	Label string
-	URI   string
-}
-
 type Logbook struct {
 	Date        string
 	ClockIn     string
 	ClockOut    string
 	Activity    string
 	Description string
-	Action      action
+	Action      string
 }
 
 func GetLogbook(date time.Time) (*Logbook, error) {
@@ -89,8 +84,15 @@ func GetWeekLogbook() ([]Logbook, error) {
 				if td.Children() == nil {
 					break
 				}
-				logbook.Action.Label = td.Children().Find("button").Text()
-				logbook.Action.URI, _ = td.Children().Attr("href")
+				action := td.Children().Find("button").Text()
+				if action == "" {
+					action, _ = td.Children().Find("input[type=submit]").Attr("value")
+					if action == "" {
+						action, _ = td.Children().Find("input.ui.orange.button").Attr("value")
+					}
+				}
+
+				logbook.Action = action
 			}
 		})
 
@@ -135,4 +137,14 @@ func ConstructEditMessage(logbook Logbook) string {
 func extractEditToken(url string) string {
 	u := strings.Split(url, "/")
 	return u[6]
+}
+
+func ConstructRequestEditMessage(logbook Logbook) (string, error) {
+	date := strings.Split(logbook.Date, " ")[1]
+	dateParse, err := time.Parse("02/01/2006", date)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("request\\n%s", dateParse.Format("2006-01-02")), nil
 }
