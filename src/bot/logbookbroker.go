@@ -53,7 +53,7 @@ func (app *logbookBroker) Callback(w http.ResponseWriter, r *http.Request) {
 
 func (app *logbookBroker) RegisterCron() {
 	fmt.Println("Registerin cron")
-	gocron.Every(1).Day().At("07:13").Do(service.SubmitReminder, app.channelToken)
+	gocron.Every(1).Day().At("07:24").Do(service.SubmitReminder, app.channelToken)
 	gocron.Every(1).Friday().At("02:00").Do(service.RequestEditReminder, app.channelToken)
 	fmt.Println("Cron successfully registered")
 
